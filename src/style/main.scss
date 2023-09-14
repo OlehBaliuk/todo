@@ -1,0 +1,16 @@
+@import 'fonts';
+
+body {
+  height: 100vh;
+  font-size: 14px;
+}
+
+input {
+  outline: none;
+}
+
+#app {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+}

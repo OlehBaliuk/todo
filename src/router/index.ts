@@ -1,30 +1,41 @@
-import Vue from "vue";
-import VueRouter, { RouteConfig } from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import Vue from 'vue'
+import VueRouter, { RouteConfig } from 'vue-router'
+import LoginPage from '@/views/LoginPage.vue'
+import ToDoList from '@/views/ToDoList.vue'
+import store from '@/store'
+import routePath from '@/constants/routes'
 
-Vue.use(VueRouter);
+Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
   {
-    path: "/",
-    name: "home",
-    component: HomeView,
+    path: '/',
+    redirect: { name: 'login' }
   },
   {
-    path: "/about",
-    name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
+    path: routePath.login,
+    name: 'login',
+    component: LoginPage
   },
-];
+  {
+    path: routePath.todo,
+    name: 'toDoList',
+    component: ToDoList
+  }
+]
 
 const router = new VueRouter({
-  mode: "history",
+  mode: 'history',
   base: process.env.BASE_URL,
-  routes,
-});
+  routes
+})
 
-export default router;
+router.beforeEach((to, from, next) => {
+  if (to.path === '/login' || Object.keys(store.state.user).length) {
+    next()
+  } else {
+    next('/')
+  }
+})
+
+export default router
