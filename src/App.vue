@@ -26,5 +26,11 @@
   &__container {
     width: 450px;
   }
+
+  @media (max-width: 590px) {
+    &__container {
+      width: 300px;
+    }
+  }
 }
 </style>

@@ -97,5 +97,11 @@ export default class CreateTodo extends Vue {
     border-radius: 5px;
     min-width: 70px;
   }
+
+  @media (max-width: 590px) {
+    &__container {
+      width: 250px;
+    }
+  }
 }
 </style>

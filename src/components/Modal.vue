@@ -45,7 +45,7 @@ export default class Modal extends Vue {
   padding: 30px;
   border-radius: 10px;
   background-color: white;
-  width: 30%;
+  width: 500px;
   min-height: 150px;
   transform: scale(0.5);
   transition: 0.4s all;
@@ -61,5 +61,11 @@ export default class Modal extends Vue {
 
 .button {
   margin-top: 50px;
+}
+
+@media (max-width: 590px) {
+  .modal__content {
+    width: 300px;
+  }
 }
 </style>

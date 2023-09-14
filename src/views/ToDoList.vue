@@ -36,16 +36,18 @@
           <label for="check" />
 
           <img
-            v-if="1"
+            v-if="isFavoriteToDo(todo.id)"
             class="todo-list__icon"
             src="../assets/fullStar.png"
             alt="star"
+            @click="removeFromFavoriteToDo(todo.id)"
           />
           <img
             v-else
             class="todo-list__icon"
             src="../assets/star.png"
             alt="star"
+            @click="addToFavoriteToDo(todo.id)"
           />
         </div>
       </div>
@@ -80,6 +82,7 @@ import CreateTodo from '@/components/CreateTodo.vue'
 })
 export default class ToDoList extends Vue {
   async mounted() {
+    this.getFavoriteToDoId()
     const { data } = await HttpService.get(apiRoutes.todos)
     this.todos = data
   }
@@ -90,9 +93,10 @@ export default class ToDoList extends Vue {
   searchText = ''
   activeModal = false
   isFetch = false
+  favoriteToDoId: string | null = ''
 
   get statusOptions() {
-    return ['All', 'Completed', 'Uncompleted']
+    return ['All', 'Completed', 'Uncompleted', 'Favorites']
   }
 
   get userIds() {
@@ -110,6 +114,10 @@ export default class ToDoList extends Vue {
         statusFilter = todo.completed === true
       } else if (this.selectedStatus === 'Uncompleted') {
         statusFilter = todo.completed === false
+      } else if (this.selectedStatus === 'Favorites') {
+        statusFilter = JSON.parse(this.favoriteToDoId || '[]').find(
+          (id) => id === todo.id
+        )
       }
 
       if (this.selectedUserId === 'All' || !this.selectedUserId) {
@@ -126,6 +134,31 @@ export default class ToDoList extends Vue {
     })
   }
 
+  isFavoriteToDo(id) {
+    return (
+      JSON.parse(this.favoriteToDoId || '[]') &&
+      JSON.parse(this.favoriteToDoId || '[]').find((todoId) => todoId === id)
+    )
+  }
+
+  getFavoriteToDoId() {
+    this.favoriteToDoId = localStorage.getItem('favoriteToDo')
+  }
+
+  removeFromFavoriteToDo(id) {
+    const toDosId = JSON.parse(this.favoriteToDoId || '[]')
+    const filteredId = toDosId.filter((todoId) => todoId !== id)
+    localStorage.setItem('favoriteToDo', JSON.stringify(filteredId))
+    this.getFavoriteToDoId()
+  }
+
+  addToFavoriteToDo(id) {
+    const favoriteIds = JSON.parse(this.favoriteToDoId || '[]')
+    favoriteIds.push(id)
+    localStorage.setItem('favoriteToDo', JSON.stringify(favoriteIds))
+    this.getFavoriteToDoId()
+  }
+
   onOpenCreateModal() {
     this.activeModal = true
   }
@@ -137,8 +170,8 @@ export default class ToDoList extends Vue {
   async onCreateToDo(todo) {
     this.isFetch = true
     const { data } = await HttpService.post(apiRoutes.todos, todo)
-    this.isFetch = false
     this.activeModal = false
+    this.isFetch = false
     this.todos.push(data)
   }
 }
@@ -199,10 +232,31 @@ export default class ToDoList extends Vue {
   &__status-container {
     display: flex;
     align-items: center;
+    margin-left: 10px;
   }
 
   &__icon {
     width: 18px;
+    cursor: pointer;
+  }
+
+  @media (max-width: 590px) {
+    &__select-container {
+      flex-direction: column;
+    }
+
+    &__select {
+      width: 100%;
+    }
+
+    &__select:first-child {
+      margin-bottom: 10px;
+    }
+
+    &__button {
+      width: 70px;
+      height: 70px;
+    }
   }
 }
 </style>
