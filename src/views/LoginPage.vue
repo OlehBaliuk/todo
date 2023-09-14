@@ -42,7 +42,6 @@ export default class LoginPage extends Vue {
   async mounted() {
     const { data } = await HttpService.get(apiRoutes.users)
     this.users = data
-    console.log(data)
   }
 
   isError = false
@@ -71,13 +70,12 @@ export default class LoginPage extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .login-page {
-  width: 450px;
   margin-top: 150px;
   background: #c3c3c3;
   border-radius: 5px;
-  color: rgb(228, 243, 236);
+  color: #e4f3ec;
 
   &__title {
     padding: 15px 0;

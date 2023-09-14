@@ -1,5 +1,9 @@
 @import 'fonts';
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   height: 100vh;
   font-size: 14px;
@@ -13,4 +17,65 @@ input {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+}
+
+input[type='checkbox']:checked,
+input[type='checkbox']:not(:checked) {
+  position: absolute;
+  left: -9999px;
+}
+
+input[type='checkbox']:checked + label,
+input[type='checkbox']:not(:checked) + label {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  padding-left: 28px;
+  height: 20px;
+  cursor: pointer;
+}
+
+input[type='checkbox']:checked + label:before {
+  content: '';
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 15px;
+  height: 15px;
+  border-radius: 2px;
+  border: 2px solid rgb(228, 243, 236);
+}
+
+input[type='checkbox']:not(:checked) + label:before {
+  content: '';
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 15px;
+  height: 15px;
+  border-radius: 2px;
+  border: 2px solid rgb(228, 243, 236);
+  background-color: inherit;
+}
+
+input[type='checkbox']:checked + label:after,
+input[type='checkbox']:not(:checked) + label:after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 6px;
+  width: 8px;
+  height: 3px;
+  border-radius: 2px;
+  border-left: 4px solid white;
+  border-bottom: 3px solid white;
+  transform: rotate(-45deg);
+}
+
+input[type='checkbox']:not(:checked) + label:after {
+  opacity: 0;
+}
+
+input[type='checkbox']:checked + label:after {
+  opacity: 1;
 }
