@@ -30,11 +30,37 @@
     <div class="todo-list__todos-container">
       <div v-for="todo in filteredTodos" :key="todo.id" class="todo-list__todo">
         <span class="todo-list__todo-title">{{ todo.title }}</span>
-        <input v-if="todo.completed" type="checkbox" name="check" checked />
-        <input v-else type="checkbox" name="check" />
-        <label for="check" />
+        <div class="todo-list__status-container">
+          <input v-if="todo.completed" type="checkbox" name="check" checked />
+          <input v-else type="checkbox" name="check" />
+          <label for="check" />
+
+          <img
+            v-if="1"
+            class="todo-list__icon"
+            src="../assets/fullStar.png"
+            alt="star"
+          />
+          <img
+            v-else
+            class="todo-list__icon"
+            src="../assets/star.png"
+            alt="star"
+          />
+        </div>
       </div>
     </div>
+
+    <button class="todo-list__button" @click="onOpenCreateModal()">
+      Create ToDo
+    </button>
+
+    <CreateTodo
+      :activeModal="activeModal"
+      :isFetch="isFetch"
+      @close-modal="onCloseCreateModal"
+      @create-todo="onCreateToDo"
+    />
   </div>
 </template>
 
@@ -44,23 +70,26 @@ import HttpService from '@/service/HttpService'
 import apiRoutes from '@/constants/apiRoutes'
 import { ToDo } from '@/interfaces/ToDo'
 import UserData from '@/components/UserData.vue'
+import CreateTodo from '@/components/CreateTodo.vue'
 
 @Component({
   components: {
-    UserData
+    UserData,
+    CreateTodo
   }
 })
 export default class ToDoList extends Vue {
   async mounted() {
     const { data } = await HttpService.get(apiRoutes.todos)
     this.todos = data
-    console.log(this.todos)
   }
 
-  todos = []
+  todos: ToDo[] = []
   selectedStatus = ''
   selectedUserId = ''
   searchText = ''
+  activeModal = false
+  isFetch = false
 
   get statusOptions() {
     return ['All', 'Completed', 'Uncompleted']
@@ -95,6 +124,22 @@ export default class ToDoList extends Vue {
 
       return statusFilter && userFilter && searchFilter
     })
+  }
+
+  onOpenCreateModal() {
+    this.activeModal = true
+  }
+
+  onCloseCreateModal() {
+    this.activeModal = false
+  }
+
+  async onCreateToDo(todo) {
+    this.isFetch = true
+    const { data } = await HttpService.post(apiRoutes.todos, todo)
+    this.isFetch = false
+    this.activeModal = false
+    this.todos.push(data)
   }
 }
 </script>
@@ -135,11 +180,29 @@ export default class ToDoList extends Vue {
 
   &__search-input {
     height: 32px;
-    width: 100%;
     border: 1px solid #c3c3c3;
     border-radius: 3px;
-    padding: 0 10px;
     margin-bottom: 10px;
+  }
+
+  &__button {
+    position: fixed;
+    font-size: 16px;
+    padding: 10px;
+    right: 50px;
+    bottom: 50px;
+    width: 100px;
+    height: 100px;
+    border: none;
+  }
+
+  &__status-container {
+    display: flex;
+    align-items: center;
+  }
+
+  &__icon {
+    width: 18px;
   }
 }
 </style>

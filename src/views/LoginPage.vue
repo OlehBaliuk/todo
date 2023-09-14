@@ -95,8 +95,6 @@ export default class LoginPage extends Vue {
 
   &__username-input,
   &__phone-number-input {
-    border: none;
-    border-radius: 5px;
     padding: 10px;
   }
 
@@ -111,13 +109,6 @@ export default class LoginPage extends Vue {
   &__submit-button {
     padding: 10px;
     border-radius: 5px;
-    border: none;
-    background: #519945;
-    color: inherit;
-
-    &:disabled {
-      opacity: 0.5;
-    }
   }
 
   &__error-message {
